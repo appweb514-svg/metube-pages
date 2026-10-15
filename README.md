@@ -11,7 +11,7 @@ Une version de [MeTube](https://github.com/alexta69/metube) qui s'installe sur *
 >
 > | Limite | Détail |
 > |---|---|
-> | **YouTube bloque souvent les serveurs GitHub** | Les IP des runners sont des IP de datacenter. YouTube répond fréquemment « Sign in to confirm you're not a bot ». Il faut alors fournir des **cookies** (secret `YTDLP_COOKIES`, voir plus bas), avec le risque que YouTube restreigne le compte dont les cookies sont issus. Beaucoup d'autres sites (Vimeo, SoundCloud, X, Dailymotion, archive.org…) fonctionnent sans cookies. |
+> | **YouTube peut bloquer les serveurs GitHub** | Les runners ont des IP de datacenter. Test réel du 15/10/2026 (yt-dlp 2026.08.19, sans cookies, runner Ubuntu) : liste des formats jusqu'en 4K et téléchargement d'une vidéo publique OK. Ça peut changer à tout moment (YouTube durcit régulièrement) : si vous voyez « Sign in to confirm you're not a bot », ajoutez des **cookies** (secret `YTDLP_COOKIES`) ou un **proxy** (variable `YTDL_OPTIONS`, ex. `{"proxy": "http://…"}`). Les cookies ne sont requis que pour les vidéos privées, avec limite d'âge ou réservées aux membres. Les instances Invidious publiques ne sont pas une alternative viable (proxy média protégé par anti-bot). |
 > | **Conditions d'utilisation de GitHub** | Les conditions d'Actions interdisent les usages « sans rapport avec la production, le test, le déploiement ou la publication du projet logiciel » et l'usage d'Actions comme CDN. Télécharger des médias avec Actions est une zone grise : GitHub peut limiter ou suspendre un compte qui en abuse. **Usage personnel et modéré uniquement, à tes risques.** Respecte aussi les conditions des sites et le droit d'auteur. |
 > | **Pas de progression en direct** | L'API de GitHub ne donne que l'état (en attente / en cours / terminé) et l'étape courante, pas le pourcentage ni la vitesse. |
 > | **Latence** | Un téléchargement démarre en 10 à 60 s (file d'attente + installation de yt-dlp), pas instantanément. |
@@ -65,9 +65,9 @@ Les Pages d'un dépôt privé exigent un compte payant, mais le **moteur** de t�
 2. Crée le jeton fin sur **ce dépôt privé**.
 3. Dans les réglages du site (fork public avec Pages), mets `toi/metube-worker` dans le champ *Repository*.
 
-### Cookies (YouTube, vidéos privées, limitées par l'âge)
+### Cookies (facultatif : vidéos privées, limitées par l'âge, ou si YouTube bloque)
 
-1. Exporte tes cookies au format *Netscape* avec une extension de navigateur (par ex. « Get cookies.txt LOCALLY »), idéalement depuis un compte secondaire.
+1. Exporte tes cookies au format *Netscape* avec une extension de navigateur (par ex. « Get cookies.txt LOCALLY »), depuis un compte secondaire (YouTube peut bannir un compte utilisé avec yt-dlp). Pour qu'ils ne soient pas renouvelés par YouTube : fenêtre privée, connexion, ouvrir seulement `youtube.com/robots.txt`, exporter, puis fermer la fenêtre.
 2. Dépôt du moteur → **Settings → Secrets and variables → Actions → Secrets → New repository secret** : nom `YTDLP_COOKIES`, valeur = le contenu du fichier.
 
 Les cookies ne passent jamais par l'interface web et ne sont jamais écrits dans les artefacts.
